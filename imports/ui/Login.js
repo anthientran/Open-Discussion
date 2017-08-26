@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { Meteor } from 'meteor/meteor';
 
 export default class Login extends React.Component {
     state = {
@@ -49,6 +50,8 @@ export default class Login extends React.Component {
                             <button className="ui fluid large teal submit button">Log in</button>
                         </div>
                     </form>
+
+                    <Link to="signup">Don't have an account? Sign up here</Link>
                 </div>
             </div>
         );
@@ -67,5 +70,21 @@ export default class Login extends React.Component {
 
     onSubmit(evt) {
         evt.preventDefault();
+
+        Meteor.loginWithPassword({email: this.state.fields.email},
+            this.state.fields.password,
+            (err) => {
+                console.log(err);
+                let errorMessage = '';
+
+                if (err) {
+                    errorMessage + 'Unable to log in. Check email and password';
+                }
+
+                this.setState({
+                    error: errorMessage
+                });
+            }
+        )
     }
 }

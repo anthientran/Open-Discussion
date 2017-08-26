@@ -1,9 +1,11 @@
 import React from 'react';
 import { Options } from './../api/options'; 
+import VotingOptionItem  from './VotingOptionItem';
 
 export default class Voting extends React.Component {
     state = {
-        options: []
+        options: [],
+        selectedOptionId: null
     };
 
     componentDidMount() {
@@ -21,13 +23,21 @@ export default class Voting extends React.Component {
 
                 {this.state.options.map((option) => {
                     return (
-                        <div key={option._id}>
-                            <h3>{option.title}</h3>
-                            <p>{option.description}</p>
-                        </div>
+                        <VotingOptionItem 
+                            key={option._id}
+                            {...option}
+                            selectedOptionId={this.state.selectedOptionId} 
+                            onOptionChanged={this.handleOptionChanged.bind(this)}
+                        />
                     );
                 })}
             </div>
         );
+    }
+
+    handleOptionChanged(id) {
+        this.setState({
+            selectedOptionId: id
+        });
     }
 }

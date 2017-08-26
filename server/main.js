@@ -3,16 +3,25 @@ import { Topics } from './../imports/api/topics';
 import { Options } from './../imports/api/options';
 
 Meteor.startup(() => {
+  
   // code to run on server at startup
- /*  Options.insert({
-    forTopic: 'Y48XR8YQ4KRXDA94q',
+  /* Options.insert({
+    forTopic: 'hwLshfgxoMkvhGuhE',
     title: 'Option 1',
     description: 'Description for option 1'
   });
 
   Options.insert({
-    forTopic: 'Y48XR8YQ4KRXDA94q',
+    forTopic: 'hwLshfgxoMkvhGuhE',
     title: 'Option 2',
     description: 'Description for option 1. This can be really long. I am not certain'
+  }); */
+
+  /* Topics.insert({
+    name: 'Remove the separator in trash bins'
+  });
+
+  Topics.insert({
+    name: 'Another topic'
   }); */
 });
