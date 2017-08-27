@@ -13,8 +13,8 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <div className="ui three column centered grid">
-                <div className="column">
+            <div className="ui middle aligned center aligned grid boxed-view ">
+                <div className="column boxed-view__box">
                     <form
                         onSubmit={this.onSubmit.bind(this)}
                         className="ui large form"
@@ -51,7 +51,9 @@ export default class Login extends React.Component {
                         </div>
                     </form>
 
-                    <Link to="signup">Don't have an account? Sign up here</Link>
+                    <div className="ui message">
+                        Don't have an account? <Link to="signup">Sign up here</Link>
+                    </div>
                 </div>
             </div>
         );
@@ -71,7 +73,7 @@ export default class Login extends React.Component {
     onSubmit(evt) {
         evt.preventDefault();
 
-        Meteor.loginWithPassword({email: this.state.fields.email},
+        Meteor.loginWithPassword({ email: this.state.fields.email },
             this.state.fields.password,
             (err) => {
                 console.log(err);

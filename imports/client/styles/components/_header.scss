@@ -1,0 +1,16 @@
+.main-header {
+    background: #651FFF;
+    color: white;
+}
+
+.main-header__content {
+    display: flex;
+    justify-content: space-between;
+    max-width: $site-max-width;
+    margin: 0 auto;
+    padding: $space;
+}
+
+.main-header--link {
+    color: white;
+}

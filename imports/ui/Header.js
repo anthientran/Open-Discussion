@@ -9,17 +9,12 @@ export default class Header extends React.Component {
     }
 
     render() {
-        
         return (
-            <div className="ui menu">
-                <div className="header item">
-                    <Link to="/"><h1>Halden open discussion</h1></Link>
-                </div>
+            <div className="main-header">
+                <div className="main-header__content">
+                    <Link to="/" className="main-header--link"><h1>Halden open discussion</h1></Link>
 
-                <div className="right menu">
-                    <div className="item">
-                        {this.renderLoginOrLogout()}
-                    </div>
+                    {this.renderLoginOrLogout()}
                 </div>
             </div>
         );
@@ -27,9 +22,9 @@ export default class Header extends React.Component {
 
     renderLoginOrLogout() {
         if (!this.state.isAuthenticated) {
-            return <Link to="login">Log in</Link>;
+            return <Link to="login" className="ui teal button">Log in</Link>;
         } else {
-            return <button className="ui button" onClick={this.onLogout.bind(this)}>Log out</button>;
+            return <button className="ui button teal" onClick={this.onLogout.bind(this)}>Log out</button>;
         }
     }
 

@@ -1,11 +1,13 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Votes } from './../api/votes';
+import { Comments } from './../api/comments';
 import VotingOptionsList from './VotingOptionsList';
 
 export default class Voting extends React.Component {
     state = {
         selectedOptionId: null,
+        votingComment: "",
         hasVoted: false,
         voteCounts: {}
     };
@@ -33,6 +35,8 @@ export default class Voting extends React.Component {
                     userId={Meteor.userId()}
                     selectedOptionId={this.state.selectedOptionId}
                     onOptionChanged={this.handleOptionChanged.bind(this)}
+                    votingComment={this.state.votingComment}
+                    onCommentChange={this.handleCommentChange.bind(this)}
                 />
 
                 {this.renderVoteButtonIfHasNotVoted()}
@@ -47,6 +51,7 @@ export default class Voting extends React.Component {
 
         return (
             <button
+                className="ui teal button"
                 disabled={!this.state.selectedOptionId}
                 onClick={this.handleVote.bind(this)}
             >
@@ -59,6 +64,14 @@ export default class Voting extends React.Component {
     handleOptionChanged(id) {
         this.setState({
             selectedOptionId: id
+        });
+    }
+
+    handleCommentChange(evt){
+        evt.preventDefault();
+
+        this.setState({
+            votingComment: evt.target.value
         });
     }
 
@@ -76,6 +89,12 @@ export default class Voting extends React.Component {
                 this.setState({
                     hasVoted: true
                 });
+            });
+
+            Comments.insert({
+                commentedBy: Meteor.userId(),
+                content: this.state.votingComment,
+                forOption: this.state.selectedOptionId
             });
         } else {
             console.log('User not log inm');

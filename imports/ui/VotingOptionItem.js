@@ -13,7 +13,12 @@ export default class VotingOptionItem extends React.Component {
                     <div className="ui form">
                         <div className="field">
                             <label>Why do you support this option? (Optional)</label>
-                            <textarea rows="2"></textarea>
+                            <textarea
+                                rows="3"
+                                onChange={this.props.onCommentChange}
+                                value={this.props.votingComment}
+                            >
+                            </textarea>
                         </div>
                     </div>
                 );

@@ -1,14 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router';
+import classNames from 'classnames';
+
+const VOTING = 'voting';
+const DISCUSSION = 'discussion';
 
 export default class TopicDetailPage extends React.Component {
+
     state = {
-        topic: null,
-        options: []
+        activeStep: VOTING
     };
 
     render() {
         const topicId = this.props.params.topicId;
+        const { activeStep } = this.state;
 
         return (
             <div>
@@ -16,14 +21,22 @@ export default class TopicDetailPage extends React.Component {
                 <p>Details of the topic</p>
 
                 <div className="ui two top attached steps">
-                    <Link className="active step" to={`/topics/${topicId}/voting`}>
+                    <Link 
+                        className={classNames("step", {"active": activeStep === VOTING})}
+                        to={`/topics/${topicId}/${VOTING}`}
+                        onClick={() => this.handleLinkClicked(VOTING) }
+                    >
                         <i className="announcement icon"></i>
                         <div className="content">
                             <div className="title">Voting</div>
                             <div className="description">Cast your vote</div>
                         </div>
                     </Link>
-                    <Link className="active step" to={`/topics/${topicId}/discussion`}>
+                    <Link
+                        onClick={() => this.handleLinkClicked(DISCUSSION) }
+                        className={classNames("step", {"active": activeStep === DISCUSSION})}
+                        to={`/topics/${topicId}/${DISCUSSION}`}
+                    >
                         <i className="comments icon"></i>
                         <div className="content">
                             <div className="title">Discussion</div>
@@ -36,5 +49,11 @@ export default class TopicDetailPage extends React.Component {
                 </div>
             </div>
         );
+    }
+
+    handleLinkClicked = (currentStep) => {
+        this.setState({
+            activeStep: currentStep
+        });
     }
 }

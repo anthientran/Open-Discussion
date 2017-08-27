@@ -28,6 +28,8 @@ export default class VotingOptionsList extends React.Component {
                                 voteCount={30}
                                 selectedOptionId={this.props.selectedOptionId}
                                 onOptionChanged={this.props.onOptionChanged}
+                                onCommentChange={this.props.onCommentChange}
+                                votingComment={this.props.votingComment}
                             />
                         );
                     })}
