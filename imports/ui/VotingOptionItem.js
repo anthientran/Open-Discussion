@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class VotingOptionItem extends React.Component {
     render() {
-        const { _id, title, description, selectedOptionId, onOptionChanged, voteCount } = this.props;
+        const { _id, title, description, selectedOptionId, onOptionChanged, voteCount, votedOptionId } = this.props;
 
         const isOptionSelected = selectedOptionId === _id;
 
@@ -25,24 +25,42 @@ export default class VotingOptionItem extends React.Component {
             }
         };
 
+        const renderRadioButton = () => {
+            if (!votedOptionId) {
+                return (
+                    <div className="ui image">
+                        <input
+                            type="radio"
+                            checked={isOptionSelected}
+                            onChange={() => onOptionChanged(_id)}
+                        />
+                    </div>
+                );
+            }
+        };
+
+        const renderCheckBoxIfVoted = () => {
+            if (votedOptionId && votedOptionId === _id) {
+                return <i className="checkmark middle aligned icon"></i>;
+            }
+            return <i className="middle aligned icon"></i>;
+        };
+
         return (
             <div className="item">
                 <div className="right floated content">
-                    <h3>{voteCount}</h3>
+                    <h3>{voteCount ? voteCount : 0}</h3>
                 </div>
 
-                <div className="ui image">
-                    <input
-                        type="radio"
-                        checked={isOptionSelected}
-                        onChange={() => onOptionChanged(_id)}
-                    />
-                </div>
+                {renderRadioButton()}
+                {renderCheckBoxIfVoted()}
                 <div className="content">
                     <div className="header">
                         {title}
                     </div>
-                    {description}
+                    <div className="item--description">
+                        {description}
+                    </div>
 
                     {renderComment()}
                 </div>

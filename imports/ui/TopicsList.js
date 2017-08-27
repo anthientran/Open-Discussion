@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
-import { Topics } from './../api/topics'; 
+import { Topics } from './../api/topics';
 import TopicItem from './TopicItem';
 
 export default class TopicsList extends React.Component {
@@ -10,11 +10,15 @@ export default class TopicsList extends React.Component {
 
     render() {
         return (
-            <div className="ui three cards">
-                {this.state.topics.map((topic) => {
-                    return <TopicItem key={topic._id} {...topic}/>
-                })}
+            <div>
+                <h2>Current topics</h2>
+                <div className="ui three cards">
+                    {this.state.topics.map((topic) => {
+                        return <TopicItem key={topic._id} {...topic} />
+                    })}
+                </div>
             </div>
+
         );
     }
 

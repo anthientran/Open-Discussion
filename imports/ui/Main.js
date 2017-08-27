@@ -6,9 +6,7 @@ export default class Main extends React.Component {
         return (
             <div>
                <Header />
-               <div className="page-content">
-                   {this.props.children}
-               </div>
+               {this.props.children}
             </div>
         );
     }

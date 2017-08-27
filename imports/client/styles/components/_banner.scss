@@ -1,0 +1,22 @@
+.banner {
+    background: #00b5ad;
+    color: white;
+    min-height: 50vh;
+}
+
+.banner__content {
+    margin: 0 auto;
+    max-width: $site-max-width;
+    padding: 2rem;
+}
+
+.banner--image {
+    background-image: url("/halden-bg.jpg");
+    background-size: cover;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 75px;
+    left: 50%;
+    margin: 0;
+}

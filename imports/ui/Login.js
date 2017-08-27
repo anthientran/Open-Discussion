@@ -13,8 +13,8 @@ export default class Login extends React.Component {
 
     render() {
         return (
-            <div className="ui middle aligned center aligned grid boxed-view ">
-                <div className="column boxed-view__box">
+            <div className="boxed-view">
+                <div className="boxed-view__box">
                     <form
                         onSubmit={this.onSubmit.bind(this)}
                         className="ui large form"

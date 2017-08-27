@@ -16,7 +16,7 @@ export default class TopicDetailPage extends React.Component {
         const { activeStep } = this.state;
 
         return (
-            <div>
+            <div className="page-content">
                 Topic details page
                 <p>Details of the topic</p>
 

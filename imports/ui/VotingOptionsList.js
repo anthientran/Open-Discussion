@@ -1,21 +1,30 @@
 import React from 'react';
 import { Options } from './../api/options';
+import { Votes } from './../api/votes';
 import VotingOptionItem from './VotingOptionItem';
 
 export default class VotingOptionsList extends React.Component {
     state = {
-        options: []
+        options: [],
     };
 
     componentDidMount() {
         const { topicId, userId } = this.props;
 
+        
+        const options = Options.find({ forTopic: topicId }).fetch();
+
+
         this.setState({
-            options: Options.find({ forTopic: topicId }).fetch(),
+            options
         });
     }
 
     render() {
+        const { selectedOptionId, votingComment, votedOptionId, onOptionChanged, onCommentChange } = this.props;
+
+        console.log(this.props.voteCounts);
+        
         return (
             <div>
                 <label>Which solution do you support?</label>
@@ -25,11 +34,12 @@ export default class VotingOptionsList extends React.Component {
                             <VotingOptionItem
                                 key={option._id}
                                 {...option}
-                                voteCount={30}
-                                selectedOptionId={this.props.selectedOptionId}
-                                onOptionChanged={this.props.onOptionChanged}
-                                onCommentChange={this.props.onCommentChange}
-                                votingComment={this.props.votingComment}
+                                voteCount={this.props.voteCounts[option._id]}
+                                selectedOptionId={selectedOptionId}
+                                onOptionChanged={onOptionChanged}
+                                onCommentChange={onCommentChange}
+                                votingComment={votingComment}
+                                votedOptionId={votedOptionId}
                             />
                         );
                     })}

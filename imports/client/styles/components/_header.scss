@@ -1,6 +1,6 @@
 .main-header {
-    background: #651FFF;
-    color: white;
+    background: #eeeeee;
+    color: #00b5ad;
 }
 
 .main-header__content {
@@ -9,8 +9,4 @@
     max-width: $site-max-width;
     margin: 0 auto;
     padding: $space;
-}
-
-.main-header--link {
-    color: white;
 }

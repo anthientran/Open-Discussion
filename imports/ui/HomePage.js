@@ -7,7 +7,10 @@ export default class HomePage extends React.Component {
         return (
             <div>
                 <Banner />
-                <TopicsList />
+                <div className="page-content">
+                    <TopicsList />
+                </div>
+                
             </div>
         );
     }

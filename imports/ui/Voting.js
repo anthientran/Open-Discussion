@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Votes } from './../api/votes';
+import { Options } from './../api/options';
 import { Comments } from './../api/comments';
 import VotingOptionsList from './VotingOptionsList';
 
@@ -8,24 +9,39 @@ export default class Voting extends React.Component {
     state = {
         selectedOptionId: null,
         votingComment: "",
-        hasVoted: false,
+        votedOptionId: false,
         voteCounts: {}
     };
 
     componentDidMount() {
         const { topicId } = this.props;
 
-        const hasVoted = Votes.find({
+        const voted = Votes.findOne({
             votedBy: Meteor.userId(),
             topicId
-        }).count() > 0;
+        });
+
+        let voteCounts = {};
+        const options = Options.find({ forTopic: topicId }).fetch();
+
+        options.forEach((option) => {
+            const count = Votes.find({
+                voteForOption: option._id
+            }).count();
+
+            voteCounts[option._id] = count;
+        });
+
 
         this.setState({
-            hasVoted
+            votedOptionId: voted ? voted.voteForOption : null,
+            voteCounts
         });
     }
 
     render() {
+        const { selectedOptionId, votingComment, votedOptionId } = this.state;
+
         return (
             <div>
                 <h1>Voting</h1>
@@ -33,10 +49,12 @@ export default class Voting extends React.Component {
                 <VotingOptionsList
                     topicId={this.props.topicId}
                     userId={Meteor.userId()}
-                    selectedOptionId={this.state.selectedOptionId}
+                    selectedOptionId={selectedOptionId}
                     onOptionChanged={this.handleOptionChanged.bind(this)}
-                    votingComment={this.state.votingComment}
+                    votingComment={votingComment}
                     onCommentChange={this.handleCommentChange.bind(this)}
+                    votedOptionId={votedOptionId}
+                    voteCounts={this.state.voteCounts}
                 />
 
                 {this.renderVoteButtonIfHasNotVoted()}
@@ -45,7 +63,7 @@ export default class Voting extends React.Component {
     }
 
     renderVoteButtonIfHasNotVoted() {
-        if (this.state.hasVoted) {
+        if (this.state.votedOptionId) {
             return <h3>You have voted</h3>
         }
 
@@ -67,7 +85,7 @@ export default class Voting extends React.Component {
         });
     }
 
-    handleCommentChange(evt){
+    handleCommentChange(evt) {
         evt.preventDefault();
 
         this.setState({
@@ -77,42 +95,38 @@ export default class Voting extends React.Component {
 
     handleVote() {
         if (Meteor.userId()) {
+            const { selectedOptionId, votingComment } = this.state;
+
             Votes.insert({
                 votedBy: Meteor.userId(),
-                voteForOption: this.state.selectedOptionId,
+                voteForOption: selectedOptionId,
                 topicId: this.props.topicId
             }, (err, res) => {
                 if (err) {
                     console.log(err);
+                    return;
                 }
 
-                this.setState({
-                    hasVoted: true
-                });
-            });
+                Comments.insert({
+                    commentedBy: Meteor.userId(),
+                    content: votingComment,
+                    forOption: selectedOptionId
+                }, () => {
+                    this.setState({
+                        votedOptionId: selectedOptionId
+                    });
 
-            Comments.insert({
-                commentedBy: Meteor.userId(),
-                content: this.state.votingComment,
-                forOption: this.state.selectedOptionId
+                    const voteCounts = Object.assign({}, this.state.voteCounts, {
+                        [selectedOptionId]: this.state.voteCounts[selectedOptionId] + 1
+                    });
+        
+                    this.setState({
+                        voteCounts
+                    });
+                });
             });
         } else {
             console.log('User not log inm');
         }
     }
-
-    /* fetchVotingResult() {
-        const optionIds = this.state.options.map(option => option._id);
-
-        let voteCounts = {};
-        this.state.options.forEach(option => {
-            const count = Votes.find({
-                voteForOption: option._id
-            }).count();
-
-            voteCounts[option._id] = count;
-        });
-
-        this.setState({ voteCounts });
-    } */
 }
