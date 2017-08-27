@@ -13,9 +13,7 @@ import Signup from './../ui/Signup';
 export const onAuthChanged = () => {
     const isAuthenticated = !!Meteor.userId();
 
-    if (isAuthenticated) {
-        browserHistory.replace('/');
-    }
+    browserHistory.replace('/');
 };
 
 export const routes = (

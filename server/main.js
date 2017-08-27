@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Topics } from './../imports/api/topics';
 import { Options } from './../imports/api/options';
+import { Votes } from './../imports/api/votes';
 
 Meteor.startup(() => {
   
