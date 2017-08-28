@@ -13,7 +13,6 @@ export default class Discussion extends React.Component {
         const { topicId } = this.props;
         const options = Options.find({ forTopic: topicId }).fetch();
 
-        console.log('id', options[0]._id );
         this.setState({
             options,
             activeOption: options.length > 0 ? options[0]._id : null

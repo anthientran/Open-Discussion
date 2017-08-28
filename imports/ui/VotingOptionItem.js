@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 export default class VotingOptionItem extends React.Component {
     render() {
-        const { _id, title, description, selectedOptionId, onOptionChanged, voteCount, votedOptionId } = this.props;
+        const { _id, title, description, selectedOptionId, onOptionChanged, votedOptionId, votedBy } = this.props;
 
         const isOptionSelected = selectedOptionId === _id;
 
@@ -49,7 +49,7 @@ export default class VotingOptionItem extends React.Component {
         return (
             <div className="item">
                 <div className="right floated content">
-                    <h3>{voteCount ? voteCount : 0}</h3>
+                    <h3>{ votedBy.length }</h3>
                 </div>
 
                 {renderRadioButton()}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
-import { Votes } from './../api/votes';
 import { Options } from './../api/options';
 import { Comments } from './../api/comments';
 import VotingOptionsList from './VotingOptionsList';
@@ -9,34 +8,13 @@ export default class Voting extends React.Component {
     state = {
         selectedOptionId: null,
         votingComment: "",
-        votedOptionId: false,
-        voteCounts: {}
+        votedOptionId: null
     };
 
     componentDidMount() {
         const { topicId } = this.props;
 
-        const voted = Votes.findOne({
-            votedBy: Meteor.userId(),
-            topicId
-        });
 
-        let voteCounts = {};
-        const options = Options.find({ forTopic: topicId }).fetch();
-
-        options.forEach((option) => {
-            const count = Votes.find({
-                voteForOption: option._id
-            }).count();
-
-            voteCounts[option._id] = count;
-        });
-
-
-        this.setState({
-            votedOptionId: voted ? voted.voteForOption : null,
-            voteCounts
-        });
     }
 
     render() {
@@ -54,7 +32,6 @@ export default class Voting extends React.Component {
                     votingComment={votingComment}
                     onCommentChange={this.handleCommentChange.bind(this)}
                     votedOptionId={votedOptionId}
-                    voteCounts={this.state.voteCounts}
                 />
 
                 {this.renderVoteButtonIfHasNotVoted()}
@@ -97,32 +74,17 @@ export default class Voting extends React.Component {
         if (Meteor.userId()) {
             const { selectedOptionId, votingComment } = this.state;
 
-            Votes.insert({
-                votedBy: Meteor.userId(),
-                voteForOption: selectedOptionId,
-                topicId: this.props.topicId
-            }, (err, res) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
+            Options.update({_id: selectedOptionId}, {
+                $push: { votedBy: Meteor.userId() }
+            });
 
-                Comments.insert({
-                    commentedBy: Meteor.userId(),
-                    content: votingComment,
-                    forOption: selectedOptionId
-                }, () => {
-                    this.setState({
-                        votedOptionId: selectedOptionId
-                    });
-
-                    const voteCounts = Object.assign({}, this.state.voteCounts, {
-                        [selectedOptionId]: this.state.voteCounts[selectedOptionId] + 1
-                    });
-        
-                    this.setState({
-                        voteCounts
-                    });
+            Comments.insert({
+                userId: Meteor.userId(),
+                optionId: selectedOptionId,
+                content: votingComment
+            }, () => {
+                this.setState({
+                    votedOptionId: selectedOptionId
                 });
             });
         } else {

@@ -10,13 +10,11 @@ export default class CommentsList extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.optionId) {
-            if (this.commentsTracker) {
-                this.commentsTracker.stop();
-            }
+            this.stopTracker();
 
             this.commentsTracker = Tracker.autorun(() => {
                 const comments = Comments.find({
-                    forOption: nextProps.optionId
+                    optionId: nextProps.optionId
                 }).fetch();
         
                 this.setState({comments});
@@ -25,19 +23,29 @@ export default class CommentsList extends React.Component {
     }
 
     componentWillUnmount() {
-        this.commentsTracker.stop();
+        this.stopTracker();
     }
 
     render() {
         return (
             <div className="ui cards">
                 {this.state.comments.map((comment) => {
+                    const user = comment.user();
+
+                    const fullName = user.profile.firstName + ' ' +  user.profile.lastName;
                     return <CommentItem
                                 key={comment._id}
                                 content={comment.content}
+                                fullName={fullName}
                             />
                 })}
             </div>
         );
+    }
+
+    stopTracker() {
+        if (this.commentsTracker) {
+            this.commentsTracker.stop();
+        }
     }
 }

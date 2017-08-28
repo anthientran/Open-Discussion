@@ -8,11 +8,13 @@ export default class CommentItem extends React.Component {
     }
 
     renderCommentCard = () => {
+
+
         return (
             <div className="ui card link">
                 <div className="content">
                     <div className="right floated meta">14h</div>
-                    <img className="ui avatar image" src="https://semantic-ui.com/images/avatar/small/matt.jpg" /> Elliot
+                    <img className="ui avatar image" src="https://semantic-ui.com/images/avatar/small/matt.jpg" /> {this.props.fullName}
 
                 <div className="description item--description">
                         <p>{this.props.content}</p>
@@ -78,7 +80,7 @@ export default class CommentItem extends React.Component {
                                                 <img src="https://semantic-ui.com/images/avatar/small/jenny.jpg" />
                                             </a>
                                             <div className="content">
-                                                <a class="author">Jenny Hess</a>
+                                                <a className="author">Jenny Hess</a>
                                                 <div className="metadata">
                                                     <span className="date">Just now</span>
                                                 </div>
