@@ -1,51 +1,62 @@
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
+import { Meteor } from 'meteor/meteor';
 import { Comments } from './../api/comments';
 import CommentItem from './CommentItem';
+import AddComment from './AddComment';
 
 export default class CommentsList extends React.Component {
     state = {
         comments: []
     };
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.optionId) {
-            this.stopTracker();
-
-            this.commentsTracker = Tracker.autorun(() => {
-                const comments = Comments.find({
-                    optionId: nextProps.optionId
-                }).fetch();
-        
-                this.setState({comments});
-            });
-        }
-    }
-
-    componentWillUnmount() {
-        this.stopTracker();
-    }
-
     render() {
         return (
-            <div className="ui cards">
+            <div className="ui comments">
                 {this.state.comments.map((comment) => {
                     const user = comment.user();
 
                     const fullName = user.profile.firstName + ' ' +  user.profile.lastName;
+
                     return <CommentItem
-                                key={comment._id}
-                                content={comment.content}
-                                fullName={fullName}
-                            />
+                        key={comment._id}
+                        {...comment}
+                        userName={fullName}
+                    />
                 })}
+                
+                <AddComment
+                    onAddReplyClicked={this.handleAddReply}
+                />
             </div>
         );
     }
 
-    stopTracker() {
-        if (this.commentsTracker) {
-            this.commentsTracker.stop();
-        }
+    handleAddReply = (text) => {
+        Comments.insert({
+            opinionId: this.props.opinionId,
+            text,
+            userId: Meteor.userId(),
+            replyTo: null
+        }, (err) => {
+            console.log(err);
+        });
+    }
+
+    componentDidMount() {
+        this.tracker = Tracker.autorun(() => {
+            const comments = Comments.find({
+                replyTo: null,
+                opinionId: this.props.opinionId
+            }).fetch();
+
+            this.setState({
+                comments
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        this.tracker.stop();
     }
 }

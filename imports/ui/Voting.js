@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Options } from './../api/options';
-import { Comments } from './../api/comments';
+import { Opinions } from './../api/opinions';
 import VotingOptionsList from './VotingOptionsList';
 
 export default class Voting extends React.Component {
@@ -78,17 +78,20 @@ export default class Voting extends React.Component {
                 $push: { votedBy: Meteor.userId() }
             });
 
-            Comments.insert({
+            Opinions.insert({
                 userId: Meteor.userId(),
                 optionId: selectedOptionId,
-                content: votingComment
-            }, () => {
+                text: votingComment,
+                likedBy: []
+            }, (err) => {
+                console.log(err);
+                
                 this.setState({
                     votedOptionId: selectedOptionId
                 });
             });
         } else {
-            console.log('User not log inm');
+            console.log('User not log in');
         }
     }
 }

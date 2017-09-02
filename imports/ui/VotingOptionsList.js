@@ -12,8 +12,6 @@ export default class VotingOptionsList extends React.Component {
         const { topicId, userId } = this.props;
 
         this.optionsTracker = Tracker.autorun(() => {
-            console.log('Tracker runs');
-
             const options = Options.find({ forTopic: topicId }).fetch();
 
             this.setState({

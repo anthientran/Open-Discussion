@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import CommentsList from './CommentsList';
+import OpinionsList from './OpinionsList';
 import { Options } from './../api/options';
 
 export default class Discussion extends React.Component {
@@ -40,7 +40,7 @@ export default class Discussion extends React.Component {
                     </div>
                     <div className="twelve wide stretched column">
                         <div className="ui segment">
-                            <CommentsList optionId={this.state.activeOption}/>
+                            <OpinionsList optionId={this.state.activeOption}/>
                         </div>
                     </div>
                 </div>
