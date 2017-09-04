@@ -1,32 +1,71 @@
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { Options } from './../api/options';
 import { Opinions } from './../api/opinions';
 import VotingOptionsList from './VotingOptionsList';
+import Chart from './Chart';
 
 export default class Voting extends React.Component {
     state = {
         selectedOptionId: null,
         votingComment: "",
-        votedOptionId: null
+        votedOptionId: null,
+        chartData: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Voting results',
+                    data: [],
+                    backgroundColor: [ // temporarily harcoded
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                    ]
+                }
+            ]
+        }
     };
 
     componentDidMount() {
         const { topicId } = this.props;
 
-        const options = Options.find({ forTopic: topicId }).fetch();
-
-        const op = Opinions.findOne({
-            userId: Meteor.userId(),
-            optionId: {
-                $in: options.map(option => option._id)
-            }
-        });
-
-        if (op) {
-            this.setState({
-                votedOptionId: op.optionId
+        this.tracker = Tracker.autorun(() => {
+            const chartData = Object.assign({}, this.state.chartData);
+            chartData.labels = [];
+            chartData.datasets[0].data = [];
+    
+            const options = Options.find({ forTopic: topicId }).fetch();
+    
+            const op = Opinions.findOne({
+                userId: Meteor.userId(),
+                optionId: {
+                    $in: options.map(option => option._id)
+                }
             });
+
+            console.log('Op', op);
+    
+            options.forEach((option) => {
+                chartData.datasets[0].data.push(option.votedBy.length);
+                chartData.labels.push(option.title);
+            });
+    
+            if (op) {
+                this.setState({
+                    votedOptionId: op.optionId
+                });
+            }
+    
+            this.setState({
+                chartData
+            });
+        });
+        
+    }
+
+    componentWillUnmount() {
+        if (this.tracker) {
+            this.tracker.stop();
         }
     }
 
@@ -37,6 +76,7 @@ export default class Voting extends React.Component {
             <div>
                 <h1>Voting</h1>
 
+                <Chart data={this.state.chartData} />
                 <VotingOptionsList
                     topicId={this.props.topicId}
                     userId={Meteor.userId()}
