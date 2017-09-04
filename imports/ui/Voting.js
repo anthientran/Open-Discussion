@@ -143,19 +143,22 @@ export default class Voting extends React.Component {
                 $push: { votedBy: Meteor.userId() }
             });
 
-            Opinions.insert({
-                userId: Meteor.userId(),
-                optionId: selectedOptionId,
-                text: votingComment,
-                likedBy: [],
-                time: new Date().getTime()
-            }, (err) => {
-                console.log(err);
-
-                this.setState({
-                    votedOptionId: selectedOptionId
+            if (votingComment && votingComment.trim().length > 0) {
+                Opinions.insert({
+                    userId: Meteor.userId(),
+                    optionId: selectedOptionId,
+                    text: votingComment,
+                    likedBy: [],
+                    time: new Date().getTime()
+                }, (err) => {
+                    console.log(err);
                 });
+            }
+
+            this.setState({
+                votedOptionId: selectedOptionId
             });
+            
         } else {
             console.log('User not log in');
         }
