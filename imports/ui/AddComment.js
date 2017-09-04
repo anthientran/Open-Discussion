@@ -15,6 +15,14 @@ export default class AddComment extends React.Component {
         });
     }
 
+    onClick = () => {
+        this.props.onAddReplyClicked(this.state.replyText);
+
+        this.setState({
+            replyText: ""
+        });
+    }
+
     render() {
         return (
             <form className="ui reply form">
@@ -27,7 +35,7 @@ export default class AddComment extends React.Component {
                 </div>
                 <div
                     className="ui blue labeled submit icon button"
-                    onClick={() => this.props.onAddReplyClicked(this.state.replyText)}
+                    onClick={this.onClick}
                 >
                     <i className="icon edit"></i> Add Reply
                 </div>

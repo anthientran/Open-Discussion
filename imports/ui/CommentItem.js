@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 export default class CommentItem extends React.Component {
     render() {
-        const { text, userName } = this.props;
+        const { text, userName, time } = this.props;
 
         return (
             <div className="comment">
@@ -13,7 +14,7 @@ export default class CommentItem extends React.Component {
                 <div className="content">
                     <a className="author">{userName}</a>
                     <div className="metadata">
-                        <span className="date">Today at 5:42PM</span>
+                        <span className="date">{moment(time).calendar()}</span>
                     </div>
                     <div className="text">
                         {text}

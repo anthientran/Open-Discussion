@@ -26,19 +26,27 @@ export default class OpinionsList extends React.Component {
         this.stopTracker();
     }
 
+    handleLike = (optionId, isLike) => {
+        if (isLike) {
+            Opinions.update({_id: optionId}, {
+                $push: { likedBy: Meteor.userId() }
+            });
+        } else { // Unlike
+            Opinions.update({_id: optionId}, {
+                $pull: { likedBy: Meteor.userId() }
+            });
+        }
+    }
+
     render() {
         return (
             <div className="ui cards">
                 {this.state.opinions.map((opinion) => {
-                    const user = opinion.user();
-
-                    const fullName = user.profile.firstName + ' ' +  user.profile.lastName;
                     return <OpinionItem
                                 key={opinion._id}
-                                text={opinion.text}
                                 commentId={opinion._id}
-                                fullName={fullName}
-                                opinionId={opinion._id}
+                                opinion={opinion}
+                                onLike={this.handleLike}
                             />;
                 })}
             </div>

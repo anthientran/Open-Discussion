@@ -14,7 +14,20 @@ export default class Voting extends React.Component {
     componentDidMount() {
         const { topicId } = this.props;
 
+        const options = Options.find({ forTopic: topicId }).fetch();
 
+        const op = Opinions.findOne({
+            userId: Meteor.userId(),
+            optionId: {
+                $in: options.map(option => option._id)
+            }
+        });
+
+        if (op) {
+            this.setState({
+                votedOptionId: op.optionId
+            });
+        }
     }
 
     render() {
@@ -34,14 +47,22 @@ export default class Voting extends React.Component {
                     votedOptionId={votedOptionId}
                 />
 
-                {this.renderVoteButtonIfHasNotVoted()}
+                <div className="space_top">
+                    {this.renderVoteButtonIfHasNotVoted()}
+                </div>
+
             </div>
         );
     }
 
     renderVoteButtonIfHasNotVoted() {
         if (this.state.votedOptionId) {
-            return <h3>You have voted</h3>
+            return (
+                <div className="ui success message">
+                    <div className="header">You have voted</div>
+                    <p>View your comment and join the discussion in the Discussion section</p>
+                </div>
+            );
         }
 
         return (
@@ -74,7 +95,7 @@ export default class Voting extends React.Component {
         if (Meteor.userId()) {
             const { selectedOptionId, votingComment } = this.state;
 
-            Options.update({_id: selectedOptionId}, {
+            Options.update({ _id: selectedOptionId }, {
                 $push: { votedBy: Meteor.userId() }
             });
 
@@ -82,10 +103,11 @@ export default class Voting extends React.Component {
                 userId: Meteor.userId(),
                 optionId: selectedOptionId,
                 text: votingComment,
-                likedBy: []
+                likedBy: [],
+                time: new Date().getTime()
             }, (err) => {
                 console.log(err);
-                
+
                 this.setState({
                     votedOptionId: selectedOptionId
                 });

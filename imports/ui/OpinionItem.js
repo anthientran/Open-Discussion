@@ -3,6 +3,8 @@ import { Modal, Header } from 'semantic-ui-react'
 import { Tracker } from 'meteor/tracker';
 import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
+import classNames from 'classnames';
+import moment from 'moment';
 
 import { Comments } from './../api/comments';
 import CommentsList from './CommentsList';
@@ -11,41 +13,11 @@ export default class OpinionItem extends React.Component {
     state = {
         isModalOpen: false,
         commentId: null,
-        comments: [],
-        replyText: ""
-    }
-
-    renderCommentCard = () => {
-        return (
-            <div className="ui card">
-                <div className="content">
-                    <div className="right floated meta">14h</div>
-                    <img className="ui avatar image" src="https://semantic-ui.com/images/avatar/small/matt.jpg" /> {this.props.fullName}
-
-                    <div className="description item--description">
-                        <p>{this.props.text}</p>
-                    </div>
-                </div>
-
-                <div
-                    className="content"
-                >
-                    <span className="right floated">
-                        <i className="heart outline like icon"></i>
-                        17 likes
-                    </span>
-
-                    <span onClick={() => this.openModal(this.props.commentId)}>
-                        <i className="comment icon"></i>
-                        3 comments
-                    </span>
-                </div>
-            </div>
-        );
+        commentsNum: 0
     }
 
     runRepliesTracker = () => {
-        
+
     }
 
     stopRepliesTracker = () => {
@@ -84,10 +56,63 @@ export default class OpinionItem extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.commentsNumTracker = Tracker.autorun(() => {
+            const commentsNum = this.props.opinion.comments().fetch().length;
+            this.setState({
+                commentsNum
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.commentsNumTracker) {
+            this.commentsNumTracker.stop();
+        }
+    }
+
     render() {
+        const { opinion } = this.props;
+
+        const user = opinion.user();
+
+        const fullName = user.profile.firstName + ' ' + user.profile.lastName;
+
+        const hasLiked = opinion.likedBy.indexOf(Meteor.userId()) !== -1;
+
+        const commentsNum = opinion.comments().fetch().length;
+
         return (
-            <div>
-                {this.renderCommentCard()}
+            <div className="card">
+                <div className="content">
+                    <div className="right floated meta">{moment(opinion.time).fromNow()}</div>
+                    <img className="ui avatar image" src="https://semantic-ui.com/images/avatar/small/matt.jpg" /> {fullName}
+
+                    <div className="description item--description">
+                        <p>{opinion.text}</p>
+                    </div>
+                </div>
+
+                <div
+                    className="content"
+                >
+                    <span className="right floated">
+                        <i
+                            className={classNames("heart like icon", { "outline": !hasLiked })}
+                            onClick={() => this.props.onLike(opinion._id, !hasLiked)}>
+                        </i>
+                        {opinion.likedBy.length} likes
+                    </span>
+
+                    <span
+                        className="card--link"
+                        onClick={() => this.openModal(this.props.commentId)}
+                    >
+                        <i className="comment icon"></i>
+                        {this.state.commentsNum} comments
+                    </span>
+                </div>
+
                 <Modal
                     open={this.state.isModalOpen}
                     onMount={this.handleModalMount}
@@ -98,7 +123,7 @@ export default class OpinionItem extends React.Component {
                     <Modal.Content>
                         <Modal.Description>
                             <CommentsList
-                                opinionId={this.props.opinionId}
+                                opinionId={this.props.opinion._id}
                             />
                         </Modal.Description>
                     </Modal.Content>

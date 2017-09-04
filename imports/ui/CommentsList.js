@@ -37,7 +37,8 @@ export default class CommentsList extends React.Component {
             opinionId: this.props.opinionId,
             text,
             userId: Meteor.userId(),
-            replyTo: null
+            replyTo: null,
+            time: new Date().getTime()
         }, (err) => {
             console.log(err);
         });
