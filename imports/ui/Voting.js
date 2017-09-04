@@ -23,9 +23,6 @@ export default class Voting extends React.Component {
             }
         });
 
-        console.log('Op', op);
-        console.log('votedOptionId', op.optionId);
-
         if (op) {
             this.setState({
                 votedOptionId: op.optionId
@@ -68,16 +65,22 @@ export default class Voting extends React.Component {
             );
         }
 
-        return (
-            <button
-                className="ui teal button"
-                disabled={!this.state.selectedOptionId}
-                onClick={this.handleVote.bind(this)}
-            >
-                Vote
+        if (Meteor.userId()) {
+            return (
+                <button
+                    className="ui teal button"
+                    disabled={!this.state.selectedOptionId}
+                    onClick={this.handleVote.bind(this)}
+                >
+                    Vote
             </button>
+            );
+        }
+        return (
+            <div className="ui success message">
+                <div className="header">Please log in to vote</div>
+            </div>
         );
-
     }
 
     handleOptionChanged(id) {
