@@ -23,6 +23,8 @@ export default class Voting extends React.Component {
             }
         });
 
+        console.log('votedOptionId', votedOptionId);
+
         if (op) {
             this.setState({
                 votedOptionId: op.optionId
