@@ -40,7 +40,7 @@ export default class VotingOptionItem extends React.Component {
         };
 
         const renderCheckBoxIfVoted = () => {
-            if (votedOptionId && votedOptionId == _id) {
+            if (votedOptionId && JSON.stringify(votedOptionId) === JSON.stringify(_id)) {
                 return <i className="checkmark middle aligned icon"></i>;
             }
             return <i className="middle aligned icon"></i>;
