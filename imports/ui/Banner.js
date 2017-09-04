@@ -10,8 +10,12 @@ export default class Banner extends React.Component {
                         <div className="eight wide column">
                             <h2>Discussion, Ideas, Innovation</h2>
 
-                            <h4>This is a short description of what Haldeb Open Discussion is about. What does it do?
-                                Bringing forward ideas, innovation from the citizens for the municipality of Halden
+                            <h4>Halden Open Discussion is an open platform for citizens to discuss topics that matter to them.
+                                It aims at bringing forward ideas, innovation from the citizens for the municipality of Halden.
+                            </h4>
+
+                            <h4>
+                            People can raise their voice through voting and discussing with others while their privacy is respected.
                             </h4>
                         </div>
                     </div>
