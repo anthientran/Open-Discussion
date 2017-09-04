@@ -42,8 +42,6 @@ export default class Voting extends React.Component {
                     $in: options.map(option => option._id)
                 }
             });
-
-            console.log('Op', op);
     
             options.forEach((option) => {
                 chartData.datasets[0].data.push(option.votedBy.length);
@@ -76,7 +74,6 @@ export default class Voting extends React.Component {
             <div>
                 <h1>Voting</h1>
 
-                <Chart data={this.state.chartData} />
                 <VotingOptionsList
                     topicId={this.props.topicId}
                     userId={Meteor.userId()}
@@ -91,6 +88,7 @@ export default class Voting extends React.Component {
                     {this.renderVoteButtonIfHasNotVoted()}
                 </div>
 
+                <Chart data={this.state.chartData} />
             </div>
         );
     }
