@@ -3,6 +3,7 @@ import { Topics } from './../imports/api/topics';
 import { Options } from './../imports/api/options';
 import { Comments } from './../imports/api/comments';
 import { Opinions } from './../imports/api/opinions';
+import './../imports/api/users';
 
 Meteor.startup(() => {
   
