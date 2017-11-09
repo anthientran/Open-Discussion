@@ -74,7 +74,7 @@ export default class OpinionItem extends React.Component {
     render() {
         const { opinion } = this.props;
 
-        const user = opinion.user();
+        const user = Meteor.users.findOne(opinion.userId);
 
         const fullName = user.profile.firstName.charAt(0) + '.' + user.profile.lastName.charAt(0);
 

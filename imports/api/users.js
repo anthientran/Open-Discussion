@@ -2,12 +2,9 @@ import { Accounts } from 'meteor/accounts-base';
 import SimpleSchema from 'simpl-schema';
 
 Accounts.onCreateUser((options, user)=> {
-    const customizedUser = Object.assign({
-        firstName: options.firstName,
-        lastName: options.lastName
-    }, user);
+    user.profile = options.profile;
 
-    return customizedUser;
+    return user;
 });
 
 Accounts.validateNewUser((user) => {
