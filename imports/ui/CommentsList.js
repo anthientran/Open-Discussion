@@ -16,7 +16,7 @@ export default class CommentsList extends React.Component {
                 {this.state.comments.map((comment) => {
                     const user = comment.user();
 
-                    const fullName = user.profile.firstName; // + ' ' +  user.profile.lastName;
+                    const fullName = user.profile.firstName.charAt(0) + '.' +  user.profile.lastName.charAt(0);
 
                     return <CommentItem
                         key={comment._id}

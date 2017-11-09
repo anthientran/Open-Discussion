@@ -76,7 +76,7 @@ export default class OpinionItem extends React.Component {
 
         const user = opinion.user();
 
-        const fullName = user.profile.firstName; // + ' ' + user.profile.lastName;
+        const fullName = user.profile.firstName.charAt(0) + '.' + user.profile.lastName.charAt(0);
 
         const hasLiked = opinion.likedBy.indexOf(Meteor.userId()) !== -1;
 
